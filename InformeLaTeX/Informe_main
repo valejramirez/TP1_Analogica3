@@ -1,0 +1,1027 @@
+%------------------------------------ Inicio ---------------------------------------
+\documentclass[11pt, a4paper]{article}
+
+% -------------- Nombre del documento --------------
+\newcommand{\nombre}{Trabajo Practico N°1}
+%---------------------------------------------------------
+
+%-------------------- Include Paquetes iniciales---------------------
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor} % Para colores en la sintaxis
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{float} 
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor} % Para colores en tablas
+\geometry{top=35mm,bottom=30mm,left=33mm,right=33mm,headsep=15mm}
+\usepackage{relsize} % agranda a un mas las letras
+\usepackage{siunitx}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lastpage} % nos dice el numero total de paginas
+\usepackage{fancyhdr} % modifica encabezado y pie de pagina
+\pagestyle{fancy} % Con ésto aplicamos el encabezado y pie 
+\renewcommand{\headrulewidth}{0.2pt} % linea encabezado tamaño
+\renewcommand{\footrulewidth}{0pt} % linea pie de pagina tamaño
+
+\cfoot{}
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\thepage}
+\lhead{\includegraphics[scale=0.12]{Imagenes/logounc.jpg}}
+\rhead{\nombre}
+%-----------------------------------------------------------------------
+
+
+\begin{document}
+
+%--------------------  Portada ---------------------
+
+
+\begin{center}
+	{\huge\textbf{Electrónica Analógica III}} \\
+	\vspace{10mm}
+	{\large -}
+	\vspace{2mm}
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/logoPrincipal.png}
+\end{figure}
+\vspace{10mm}
+\textscale{3}{ \textbf{\nombre}} \\
+\vspace{8mm}
+\textscale{1.6}{ Acopladores\textbf{}}\\
+\vspace{6mm}
+	\textscale{1.3}{ Electrónica Analógica III - 2025\textbf{}}\\
+	\vspace{15mm}
+	---------------------------------------------\-\\
+	\vspace{15mm}
+	\textscale{1.3}{\textbf{Alumno:}}\\
+	\vspace{6mm}
+	\textscale{1.3}{Ramirez, Valentin Jose}\\
+	\vspace{15mm}
+	\textscale{1.3}{\textbf{Profesores:}}\\
+ \vspace{6mm}
+ \textscale{1.3}{Ing. Bruni Rodrigo}\\
+ \vspace{2mm}
+ \textscale{1.3}{Ing. Dadam Federico}\\
+	\thispagestyle{empty}
+\end{center}
+\clearpage
+%----------------------------fin portada-----------
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+
+% ------------------------------------- Desarrollo ---------------------------------
+\pagenumbering{arabic}
+
+\section{Introducción}
+\subsection{Objetivo}
+El objetivo de este trabajo práctico es el de diseñar y construir un circuito sintonizado con ciertas características. El circuito deberá tener una frecuencia central de 12 MHz y un ancho de banda de 1.2 MHz. También se deberá adaptar las impedancias para que la impedancia de entrada sea de \SI{50}{\ohm}  y la de salida de \SI{1000}{\ohm} .
+\subsection{Análisis teórico}
+Sea un sistema de comunicaciones y sus partes
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/Sistema.png}
+    \caption{Sistema de comunicaciones}
+\end{figure}
+El acoplador que se encuentra entra la antena y el primer amplificador es muy importante en el proceso de comunicaciones. Su función es la de ajustar la sintonía para seleccionar una banda de frecuencias especifica, limitando el ancho de banda de entrada garantizando el correcto funcionamiento del sistema. Además, actúa como adaptador de impedancias para así lograr la máxima transferencia de energía.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/Sistema2.png}
+    \caption{Acoplamiento para máxima transferencia de energía}
+\end{figure}
+Para lograr la máxima transferencia de energía en el circuito, la impedancia a la salida de la antena $Z_g$ debe ser igual a la impedancia a la entrada del amplificador $Z_L$. De lo contrario, se requiere una etapa de adaptación. Esta etapa deberá tener una impedancia de entrada igual al conjugado de la impedancia de salida del módulo anterior $Z_g^*$, y una impedancia de salida igual al conjugado de la impedancia de entrada de la próxima etapa $Z_L^*$.
+
+Desde el punto de vista de la sintonía, el acoplador actúa restringiendo el paso de un rango específico de frecuencias que son relevantes para el sistema de comunicaciones, eliminando aquellas que no son necesarias desde la entrada. En esencia, el acoplador funciona como un filtro selectivo de frecuencias. Como tal, este filtro se define por su frecuencia central $f_0$ y su ancho de banda $BW$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/AnchoTeorico.png}
+    \caption{Ancho de banda y frecuencia central}
+\end{figure}
+Una posible arquitectura para construir un circuito sintonizador podría ser la de un circuito LC en paralelo el cual se caracteriza por su frecuencia de resonancias y su ancho de banda, que esta relacionado con el factor de calidad Q del sistema.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/sintonizado.png}
+    \caption{Circuito sintonizado}
+\end{figure}
+La frecuencia de resonancia se alcanza cuando la reactancia capacitva iguala la reactancia inductiva. Por su parte y como se menciono anteriormente, el ancho de banda esta determinado por el factor Q del sistema y la frecuencia central.
+\begin{equation}
+    X_L = X_C
+\end{equation}
+
+\begin{equation}
+    f_0 = \frac{1}{2\pi \cdot \sqrt{L \cdot C}}
+\end{equation}
+
+\begin{equation}
+    Q = \frac{f_0}{BW} = \frac{R}{X_L}
+\end{equation}
+
+donde R es el paralelo de
+
+\begin{equation}
+    R = R_g \parallel R_p \parallel R_L
+\end{equation}
+Con este tipo de circuito, se puede fijar la función de sintonía, pero no así la de adaptación de impedancias. Esto implica que existen infinitos pares de L y C que satisfacen la frecuencia de resonancia, pero no proporcionan suficiente información para determinar el factor de calidad Q y el ancho de banda. Para lograr la adaptación, se sabe que la red de acoplamiento debe proporcionar una impedancia a ala entrada igual al conjugado de $R_g$ y, a la salida, igual al conjugado $R_L$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/Adaptador.png}
+    \caption{Adaptador de impedancias}
+\end{figure}
+Para poder realizarlo, hay que hacer algunos cambios en el circuito sintonizado. Se divide el capacitor total en dos capacitores de valor C/2, para obtener información precisa sobre el ancho de banda.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/ModeloCaps.png}
+    \caption{Modelo con capacitores C/2}
+\end{figure}
+Luego, se divide nuevamente el valor de los capacitores de forma tal que 
+\begin{equation}
+    C_1 serie C_2 = C/2
+\end{equation}
+\begin{equation}
+    C_3serie C_4 = C/2
+\end{equation}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/ModeloCaps2.png}
+    \caption{Modelo modificado}
+\end{figure}
+Estos cambios en la disposición de los capacitores no afectan la capacidad total del circuito, ya que solo implican una reorganización de los componentes, por lo que no se ve alterada la frecuencia de resonancia.
+Para cumplir las especificaciones restante, se realiza un cambio esencial: la conexión de la antena en el punto medio de los capacitores $C_1$ y $C_2$, como también la conexión de la carga entre $C_3$ y $C_4$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/Modelo3.png}
+    \caption{Modelo equivalente}
+\end{figure}
+El análisis propuesto es como el de un autotransformador, pero utilizando las reactancias capacitivas en vez de las inductivas. En este enfoque, la impedancia de entrada $R_g$ puede reflejarse en el secundario, al igual que la impedancia de carga $R_L$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/modelo4.png}
+    \caption{Modelo equivalente con impedancias reflejadas} 
+\end{figure}
+La resistencia $R'_g$ dependerá de la relación entre $C_1$ y $C_2$, como también ocurre con $R'_L$ y $C_3$ y $C_4$. En este nuevo circuito, la resistencia total incluirá las dos resistencias reflejadas y la resistencia de pérdidas del inductor.
+\begin{equation}
+    R_T = R_p \parallel R_g' \parallel R_L'
+\end{equation}
+La principal diferencia con el circuito inicial es la posibilidad de ajustar el valor de $R'_g$ variando la relacion entre $C_1$ y $C_2$, y de manera análoga para $R'_L$ y $C_3$ y $C_4$. Es importante recordar que en el circuito original, los valores de $R_g$ y $R_L$ no eran conocidos, ya que dependian de etapas anteriores o posteriores respectivamente. Por tanto, con estos valores de resistencias se puede terminar $R_T$ y el ancho de banda.
+Finalmente, la relación $R'_g$ y $R_g$ se determina por la relación entre los capacitores de entrada, y de manera similar para la relación entre $R'_L$ y $R_L$ con los capacitores de salida.
+\begin{equation}
+    R_g' = \left( 1 + \frac{C_2}{C_1} \right)^2 \cdot R_g
+\end{equation}
+
+\begin{equation}
+    R_L' = \left( 1 + \frac{C_4}{C_3} \right)^2 \cdot R_L
+\end{equation}
+\subsection{Otro tipo de acomplamiento: Red \ensuremath{\pi}}
+El nombre "red II" se deriva de su disposición, que consta de tres reactancias organizadas de manera similar a la letra griega π. Es una configuración de adaptación de impedancias utilizada para maximizar la transferencia de potencia desde una fuente AC hacia una resistencia de carga.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{Imagenes/acoplamientopi.png}
+    \caption{Red \ensuremath{\pi}}
+    \label{fig:enter-label}
+\end{figure}
+Similar a las redes tipo T, las redes II son adaptables en términos de selectividad, ya que pueden ser diseñadas para aumentar o disminuir las impedancias según las necesidades del circuito. Regularmente, los condensadores son ajustables para que el circuito pueda afinarse a la resonancia y configurarse para la potencia de salida máxima. Esta capacidad de ajuste es una diferencia clave con respecto a las redes L, que durante su diseño ofrecen un control limitado sobre el factor de calidad (Q), el cual está definido por el circuito
+Hay ocho configuraciones básicas para este tipo de redes:
+\begin{itemize}
+    \item \textbf{Cuando la resistencia de la fuente es mayor que la de la carga:}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=.8\linewidth]{Imagenes/conf1.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \item \textbf{Cuando la resistencia de carga es mayor que la de la fuente:}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=.8\linewidth]{Imagenes/conf2.png}
+        \label{fig:enter-label}
+    \end{figure}
+\end{itemize}
+Esta disposición también es conocida como "back to back", lo que implica conectar dos redes L en una configuración invertida una respecto a la otra. Esto se realiza para adaptar las resistencias de carga y de fuente a una impedancia o resistencia virtual específica entre ellas.
+
+En conclusión, las redes II son filtros pasabajos que maximizan la transferencia de potencia y ofrecen un mayor control sobre el factor de calidad del circuito en comparación con otros tipos de redes.
+
+
+\section{Diseño}
+\subsection{Requerimientos del diseño}
+El circuito a construir debe cumplir con los siguientes requisitos:
+\begin{itemize}
+    \item \textbf{Frecuencia central}: 12MHz
+    \item \textbf{Ancho de banda}: 1.2MHz 
+    \item \textbf{Impedancia de entrada}: 50~\(\Omega\)
+    \item \textbf{Impedancia de salida}: 1000~\(\Omega\) 
+\end{itemize}
+\subsection{Calculo del inductor}
+A partir de los requerimientos de la consigna, se desarrollo una planilla de excel en la cual a partir de ciertos parámetros constructivos fijados previamente, en este caso el diámetro y cantidad de vueltas de la bobina, la frecuencia de resonancia de la misma, además del diámetro del conductor y la separación entre espiras, se encontró el factor K, que depende de L/D, en la curva de "K", el cual es un factor empírico. La tabla, para la primer parte del calculo es la siguiente:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Imagenes/tablainductor.png}
+    \caption{Tabla correspondiente al diseño del inductor. En amarillo se ve el valor de inductancia seleccionado.} 
+\end{figure}
+Las formulas con la que se realizaron los cálculos fueron las siguientes:
+\begin{equation}
+    N_s = \frac{1}{d + S} \hspace{3cm} l = \frac{N}{N_s}
+\end{equation}
+\begin{equation}      
+      L = D^3 \cdot N_s^2 \cdot K \cdot 10^{-3}
+\end{equation}
+
+\subsection{Calculo de la resistencia equivalente}
+Se procede a calcular el valor de las resistencias reflejadas para la correcta adaptación de impedancias. A partir de estas, calculamos también el valor de los capacitores que logran dicha adaptación.
+
+A partir de  los valores de los Q cargado y descargado, los cuales tienen las siguientes fórmulas:
+
+\begin{equation}
+    Q_d = \frac{R_p}{X_l}
+\end{equation}
+
+\begin{equation}
+    Q_c = \frac{f_o}{BW} = \frac{R_t}{X_L}
+    \label{qc}
+\end{equation}
+
+
+\begin{equation}
+    Q_c << Q_d
+\end{equation}
+
+$R_T$ se calcula según:
+
+\begin{equation}
+    R_T =  R_a'//R_p//R_L'
+\end{equation}
+
+Luego, $R_p$, la resistencia de perdidas del inductor, la calculamos del producto $Q_d$ \cdot $X_L$. Como $R_p$ es conocida, determinamos la resistencias reflejadas, para esto se agrupan dos resistencias en paralelo de la siguiente forma: 
+
+\begin{equation}
+    R_T =  R_a'//(R_p//R_L')
+\end{equation}
+
+Se hace la siguiente simplificación:
+
+
+\begin{equation}
+    R_a' =  2 \cdot R_T
+\end{equation}
+
+\begin{equation}
+    R_p//R_L' =  2 \cdot R_T
+\end{equation}
+
+\begin{equation}
+    R_p//R_L' =R_a'=  2 \cdot R_T
+\end{equation}
+
+Reemplazando, nos queda la siguiente ecuación:
+
+\begin{equation}
+    R_L' = \frac{2 R_{\text{T}} R_p}{R_p - 2 R_{\text{T}}}
+\end{equation}
+
+Este cálculo también se hizo en una planilla:
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/tablaresistencias.png}
+    \caption{Tabla con el cálculo de la resistencia equivalente}
+\end{figure}
+
+
+\subsection{Calculo del capacitor}
+El valor de la capacitancia total del circuito está estrechamente relacionado a la inductancia y a la frecuencia de resonancia, por lo que el valor del capacitor está dado por:
+\begin{equation}
+    C = \frac{1}{L \cdot (2\pi f_0)^2}
+\end{equation}
+
+Tenemos que:
+\begin{equation}
+    \frac{C}{2}=C1 \hspace{1mm} serie \hspace{1mm} C2 \hspace{15mm} \frac{C}{2}=C3 \hspace{1mm} serie \hspace{1mm} C4
+\end{equation}
+
+ Y conociendo los valores de las impedancias reflejadas, podemos conocer el factor de transformación. Entonces, tenemos un solo par de capacitores que cumple con ambos criterios: el de sintonía y el de adaptación.
+ A través de las ecuaciones anteriores y de la relación de transformación es posible obtener el valor de los capacitores.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.25\linewidth]{relacion.png}
+    \caption{Relación de transformación a la entrada}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\begin{equation}
+    R'_g = X_{C_1} + \frac{R_g X_{C_2}}{R_g + X_{C_2}}
+    = \frac{1}{j\omega C_1} + \frac{R_g}{j\omega C_2} \cdot \frac{1}{R_g + \frac{1}{j\omega C_2}}= \frac{1}{j\omega C_1} + \frac{R_g}{1 + R_g \cdot j\omega C_2}
+\end{equation}
+
+\begin{equation}
+    = \frac{(1 + R_g \cdot j\omega C_2) + R_g \cdot (j\omega C_1)}{(j\omega C_1) \cdot (1 + R_g \cdot j\omega C_2)}= \frac{1 + j\omega (C_2 + C_1)R_g}{-j\omega^2 C_1 C_2 R_g + j\omega C_1}
+\end{equation}
+
+Ahora pasamos al modelo de admitancias:
+
+\begin{equation}
+    \frac{1}{R'_g} = \frac{j \omega C_1 - j \omega^2 C_1 C_2 R_g}{1 + j \omega (C_2 + C_1) R_g}
+\end{equation}
+
+Multiplicando y dividiendo por su conjugado:
+
+\begin{equation}
+    \frac{1}{R'_g} = \frac{j\omega C_1 - \omega^2 C_1 C_2 R_g}{1 + j\omega (C_2 + C_1) R_g} \cdot \frac{1 - j\omega (C_2 + C_1) R_g}{1 - j\omega (C_2 + C_1) R_g}
+\end{equation}
+
+\begin{equation}
+\frac{1}{R'_g}= \frac{j\omega C_1 - \omega^2 C_1 C_2 R_g + \omega^2 C_1 (C_2 + C_1) R_g + j\omega^3 C_1 C_1 (C_2 + C_1) R_g^2}{1 + \left(j\omega (C_2 + C_1) R_g\right)^2}
+\end{equation}
+
+\begin{equation}
+   \frac{1}{R'_g} = \frac{\omega^2 C_1 R_g \left( (\mathcal{C}_2 + C_1) - \mathcal{C}_2 \right) + j \omega C_1 \left( 1 + \omega^2 C_2 (C_2 + C_1) R_g^2 \right)}{1 + \left( j \omega (C_2 + C_1) R_g \right)^2}
+\end{equation}
+
+\begin{equation}
+   \frac{1}{R'_g} = \frac{\omega^2 C_1^2 R_g + j \omega C_1 \left(1 + \omega^2 C_2 \left(C_2 + C_1\right) R_g^2\right)}{1 + \left(j \omega \left(C_2 + C_1\right) R_g\right)^2}
+\end{equation}
+
+Suponiendo que $C_1$ y $C_2$ se encuentran en el orden de los picofaradios, se cumple: 
+
+
+\begin{equation}
+    \omega^2 C_2 (C_2 + C_1) R_g^2 \gg 1
+\end{equation}
+
+\begin{equation}
+    \left( j \omega (C_2 + C_1) R_g \right)^2 \implies \left( \omega^2 (C_2 + C_1)^2 R_g^2 \right) \gg 1
+\end{equation}
+
+Por lo tanto, se puede simplificar de la siguiente forma:
+
+
+\begin{equation}
+    \frac{1}{R'_g} = \frac{\omega^2 C_1^2 R_g + j \omega C_1 \left(\omega^2 C_2 (C_2 + C_1) R_g^2\right)}{\left(j \omega (C_2 + C_1) R_g\right)^2}
+\end{equation}
+
+\begin{equation}
+\frac{1}{R'_g}= \frac{\omega ^2 C_1^2 R_g'}{j^2 \omega^2  (C_2 + C_1)^2 R_g'} + \frac{j \omega  C_1 C_2 (C_2 + C_1) R_g'}{j^2\omega^2  (C_2 + C_1) ^2 R_g'^2}
+\end{equation}
+
+\begin{equation}
+\frac{1}{R'_g}= \frac{C_1^2}{j^2 (C_2 + C_1)^2 R_g} + \frac{\omega C_1 C_2}{j (C_2 + C_1)}
+\end{equation}
+
+Volviendo al modelo de las impedancias, tenemos:
+
+
+\begin{equation}
+    R'_g = -\frac{(C_2 + C_1)^2 R_g}{C_1^2} + \frac{j (C_2 + C_1)}{\omega C_1 C_2}
+\end{equation}
+
+De forma análoga, considerando la relación de transformación en la salida:
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\linewidth]{image.png}
+    \caption{Relación de transformación a la salida}
+    \label{fig:enter-label}
+\end{figure}
+
+Se obtiene:
+
+\begin{equation}
+    R'_L = R_L \left( \frac{C_4}{C_3} + 1 \right)^2
+\end{equation}
+
+Entonces:
+
+\begin{equation}
+    \frac{C}{2} = \frac{C_1 \cdot C_2}{C_1 + C_2}\hspace{3cm}
+    \frac{C}{2} = \frac{C_3 \cdot C_4}{C_3 + C_4}
+\end{equation}
+
+
+% Requires: \usepackage{amsmath}
+\begin{equation}
+\implies \frac{C}{2} \cdot C_1 + \frac{C}{2} \cdot C_2 = C_1 \cdot C_2 \hspace{1cm}
+\frac{C}{2} \cdot C_2 = C_1 \cdot C_2 - \frac{C}{2} \cdot C_1
+\end{equation}
+
+\begin{equation}
+\frac{C}{2} \cdot C_2 
+= C_1 \cdot \left( C_2 - \frac{C}{2} \right) \\
+\implies C_1 = \frac{C/2 \cdot C_2}{C_2 - C/2}
+\end{equation}
+
+
+Ahora despejamos nuevamente $C_1$:
+
+% Requires: \usepackage{amssymb}
+\begin{equation}
+    R'_g = R_g \left( \frac{C_2}{C_1} + 1 \right)^2 \implies C_1 = \frac{C_2}{\sqrt{\frac{R'_g}{R_g} - 1}}
+    \label{eq:equation_label}
+\end{equation}
+
+\begin{equation}
+C/2 = \frac{\frac{C_2}{\sqrt{\frac{R'_g}{R_g} - 1}} \cdot C_2}{\frac{C_2}{\sqrt{\frac{R'_g}{R_g} - 1}} + C_2}=
+\frac{C_2^2}{C_2 + C_2 \cdot \sqrt{\frac{R'_g}{R_g} - 1}}
+\end{equation}
+
+\begin{equation}
+\frac{C_2^2}{C_2 \cdot \left(1 + \sqrt{\frac{R'_g}{R_g} - 1}\right)}
+\implies C_2 = C/2 \cdot \sqrt{\frac{R'_g}{R_g}}
+\end{equation}
+
+De manera similar se puede llegar a las expresiones de $C_3$ y $C_4$:
+
+\begin{equation}
+  C_3 = \frac{C/2 \cdot C_4}{C_4 - C/2} \hspace{2cm}
+  C_4 = C/2 \cdot \sqrt{\frac{R'_L}{R_L}}
+\end{equation}
+
+
+En el excel se puede ver como:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/tablacaps.png}
+    \caption{Tabla con el cálculo de los capacitores}
+\end{figure}
+Los valores seleccionados que podemos ver resaltados en color amarillo en la última figura fueron elegidos teniendo en cuenta algunas consideraciones. Si bien hay infinitos pares de L y C que cumplen la condición de resonancia, hay que tener en cuenta que si el valor de C es muy bajo, entonces las capacitancias parásitas influirán significativamente en la $f_o$. También, si C es muy grande, L debe ser muy pequeño, lo que no lo hace viable constructivamente. Además es necesario que C sea considerablemente superior a la capacitancia de entrada del dispositivo de medición.  Finalmente, los valores seleccionados de capacitores no fueron estrictamente iguales a los calculados, ya que comercialmente no existen. Para ello los capacitores seleccionados fueron dos de 100 pF, uno de 330 pF y otro de 470 pF.
+\section{Simulación}
+\subsection{Circuito simulado}
+Ahora una vez ya calculados todos los componentes del circuito, se procede a construir el circuito en el software LTspice para realizar mediciones en la simulación, comprobando que se cumplan los requerimientos. El circuito simulado es el siguiente:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/circuito.png}
+    \caption{Circuito sintonizado con adaptación de impedancias}
+\end{figure}
+\subsection{Frecuencia de resonancia}
+Se simula un diagrama de Bode para encontrar el punto donde la ganancia es máxima, la cual queda de la siguiente manera:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/FResonanciaSim.png}
+    \caption{Frecuencia de resonancia simulada}
+\end{figure}
+En esta figura se puede apreciar que el circuito tiene el comportamiento deseado, ya que el pico de ganancia esta en la frecuencia de resonancia y luego esta disminuye hacia ambos lados. Los resultados de la simulación son:
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Frecuencia de resonancia} & 11.80 MHz \\ \hline
+        \textbf{Ganancia} & 6.80 dB \\ \hline
+    \end{tabular}
+    \caption{Mediciones obtenidas.}
+\end{table}
+Si bien el circuito se diseño para funcionar en 12MHz y el resultado es de 11.8MHz, esto es aceptable ya que se debe a los valores empleados en los capacitores, los cuales son comerciales y no los calculados. Este resultado tiene un error porcentual de aproximadamente 1.67\%, lo cual se considera aceptable.
+\subsection{Ancho de banda}
+Se mide el ancho de banda del sistema, realizando dos mediciones uno para el circuito con carga y otro para el circuito sin carga. Se buscarán los puntos en los que la señal cae 3 dB y se medirá el ancho de banda como la diferencia en frecuencia de estos dos puntos. Se realizarán dos mediciones, una con la carga conectada y otra con la carga desconectada.
+El ancho de banda con carga entonces es:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/BW_Concarga.png}
+    \caption{Ancho de banda con carga simulado}
+\end{figure}
+Podemos ver entonces que el ancho de banda con carga es de aproximadamente 1.13 MHz, ligeramente mayor a la requerida.
+El ancho de banda sin carga medido es:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Imagenes/BW_Concarga.png}
+    \caption{Ancho de banda sin carga simulado}
+\end{figure}
+Podemos observar que sin carga, el ancho de banda disminuye notablemente mientras que la ganancia aumenta. En este caso el ancho de banda es de 514KHz.
+\subsection{Impedancia de entrada}
+Para simular la impedancia de entrada, primero se mide la señal sin conectar la resistencia (señal antes de la resistencia interna del generador), luego se hace la misma medición, pero después de la resistencia del generador; tenemos que ver cuánta tensión cae en la resistencia del generador. Si el sistema está bien adaptado, debería caer la mitad. Del gráfico vemos que:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Imagenes/ZinSim.png}
+    \caption{Medición de la impedancia de entrada}
+\end{figure}
+En la simulación podemos ver que en la $f_0$ la tensión cae practicamente a la mitad, siendo esta de $V_x$= 480mV y la tensión de entrada $V_in$=1V. Despejando el divisor resistivo conformado por $Z_i$ y $R_g$ tenemos que:
+\begin{equation}
+    Z_i=\frac{V_2}{V_1-V_2}\cdot R_g=46.15 \Omega
+\end{equation}
+La resistencia de entrada tiene entonces un error porcentual de aproximadamente 7.70%. 
+\subsection{Impedancia de salida}
+
+Para determinar la impedancia de salida, se hace un proceso similar que el anterior, pero con la resistencia de carga. Primero medimos la tensión de salida con la carga desconectada y luego realizamos la misma medición con la carga conectada. Si el sistema está bien adaptado, la tensión debería caer a la mitad. Los resultados obtenidos fueron:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Imagenes/zo1.png}
+    \caption{Carga desconectada. $Vfo$= 4.65 V}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Imagenes/zo2.png}
+    \caption{Carga conectada. $Vfo$=2.18V}
+\end{figure}
+
+El resultado de $Z_o$ finalmente es:
+\begin{equation}
+    Z_o=\frac{V_2}{V_1-V_2}\cdot R_L= 882.59\Omega
+\end{equation}
+Para esta $Zout$ tenemos un error porcentual del 11.7\%.
+
+\section{Implementación física del circuito y mediciones}
+\subsection{Elaboración del inductor}
+Las características de la bobina son las siguientes:
+\begin{table}[h]
+\centering
+\begin{tabular}{c c c c c c c c c} % Añadimos espacio vertical
+\toprule
+\rowcolor{lightgray} % Color gris claro para el encabezado
+$L$ [uHy] & $N$ & $L$ [cm] & $D$ [cm] & $d$ [cm] & $S$ [cm] & $L/D$ & $N_s$ & $K$ \\
+\midrule
+1.123 & 10 & 4 & 2.5 & 0.2 & 0.2 & 1.6 & 2.5 & 11.5 \\
+\bottomrule
+\end{tabular}
+\caption{Valores del inductor }
+\label{tab:inductor_alternativo}
+\end{table}
+Se eligió un conductor con un diámetro de 2mm, mientras que el diámetro del inductor es de aproximadamente 2,5cm. Para su construcción se uso un palo de escoba que tenía un diámetro de aproximadamente 2.3 cm. Sobre el mismo se le dieron las 10 vueltas al arrollamiento procurando cumplir con la separación de 2mm entre cada espira, colocando un alambre del mismo diámetro que el conductor entre cada espira para garantizar la separación. Posteriormente, el inductor fue soldado en la placa de PCB, al igual que los capacitores y dos conectores tipo BNC-H para facilitar las mediciones.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Imagenes/inductor.png}
+    \caption{Circuito construido}
+\end{figure}
+\subsection{Frecuencia de resonancia}
+\subsubsection{Consideraciones para medir $f_0$}
+Para medir la frecuencia de resonancia, primero se desconectó la carga, y luego se soldó una resistencia de prueba en el nodo superior; esta resistencia debe ser de alrededor del 10\% de Rp (para este caso, $R_p$=4.7K$\Omega$). Para encontrar $f_0$, colocamos el generador y el osciloscopio de la siguiente forma:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/foprimacirc.png}
+    \caption{Medición de $f_0$}
+\end{figure}
+
+Esta medición no es del todo acertada, ya que al introducir el osciloscopio estamos introduciendo una capacidad en paralelo con el circuito, lo que mueve el valor de $f_0$. Llamamos a esta primera medición $f_0'$, para encontrar el valor correcto de la frecuencia de resonancia, primero debemos encontrar el valor de la capacidad del osciloscopio, para esto se añade un capacitor extra $C_x$ (para este caso $C_x$=120pF) de la siguiente forma:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/foprimaprima (2).png}
+    \caption{Introducción de $C_x$ para medir $f_0''$}
+\end{figure}
+
+Ahora repetimos la medición, pero encontramos un nuevo valor de frecuencia  de resonancia más bajo, a esta frecuencia la llamamos $f_0''$. Ahora con estos valores se puede encontrar $f_0$ de la siguiente forma:
+
+
+Se parte de las siguientes ecuaciones:
+
+\begin{equation}
+    f_0' = \frac{1}{2\pi \sqrt{L \cdot (C_T + C_X)}}
+    \hspace{3cm}
+   f_0'' = \frac{1}{2 \pi  \sqrt{L \cdot (C_T + C_X+ C_F)}}
+\end{equation}
+
+Haciendo la relación entre ambas, obtenemos:
+
+
+\begin{equation}
+    \frac{f_0'}{f_0''} = \frac{C_T + C_X + C_F}{C_T + C_X}
+\end{equation}
+
+Pasamos los denominadores multiplicando:
+
+\begin{equation}
+    (f_0')^2 \cdot \left( C_\tau + C_x \right) = (f_0'')^2 \cdot \left( C_T + C_X + C_F \right) 
+\end{equation}
+
+Sacamos factor común $C_X$:
+
+\begin{equation}
+    (f_0')^2\cdot C_t + (f_0')^2 \cdot C_x =  (f_0'')^2 \cdot C_x + (f_0'')^2 \cdot \left( C_T + C_F \right)
+\end{equation}
+
+Reordenando:
+
+\begin{equation}
+    C_X \left( (f_0')^2 - (f_0'')^2 \right) = (f_0'')^2 \left( C_{T} + C_{F} \right) - (f_0')^2 \cdot C_{T}
+\end{equation}
+
+Finalmente despejamos el valor de la capacidad del osciloscopio:
+
+\begin{equation}
+C_x = \frac{C_T \cdot \left( (f_0'')^2 - (f_0')^2 \right) + C_F \cdot (f_0'')^2}{(f_0')^2 - (f_0'')^2}
+\label{cx}
+\end{equation}
+
+Ahora, conociendo $C_X$ podemos despejar el valor de la inductancia como:
+
+
+\begin{equation}
+    L = \frac{1}{(2\pi f_0')^2 \cdot (C_T + C_X)}
+    \label{L}
+\end{equation}
+
+Ya con estos valores podemos calcular el valor real de la frecuencia de resonancia de nuestro sistema como:
+
+
+\begin{equation}
+    f_0 = \frac{1}{2\pi \sqrt{L \cdot C_T }}
+    \label{fo}
+\end{equation}
+\subsubsection{Medición de $f_0$}
+
+
+
+Primero buscamos la resonancia sin el capacitor externo:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/foprimamedida.jpg}
+    \caption{Medición de  $f_0'$}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{$f_0'$} & 8.2 MHz \\ \hline
+    \end{tabular}
+    \caption{Tabla de frecuencia de resonancia}
+\end{table}
+
+Ahora añadimos un capacitor externo y volvemos a realizar la medición:
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/foprimaprimamedida.jpg}
+    \caption{Medición de  $f_0''$}
+\end{figure}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{$f_0''$} & 6.88 MHz \\ \hline
+    \end{tabular}
+    \caption{Tabla de frecuencia de resonancia}
+\end{table}
+Con estos dos valores podemos calcular la verdadera frecuencia de resonancia de la siguiente forma:
+
+Primero calculamos la capacidad parásita del osciloscopio utilizando la ecuación \ref{cx}, de modo que:
+
+\begin{equation}
+C_x =\frac{156.6pF \cdot \left( (6.9MHz)^2 - (8.2MHz)^2 \right) + 120pF \cdot (6.9MHz)^2}{(8.2MHz)^2 - (6.9MHz)^2}=135pF
+\end{equation}
+Ahora calculamos el valor de la inductancia utilizando la ecuación \ref{L}, lo que nos queda:
+
+\begin{equation}
+    L = \frac{1}{(2\pi 8.2MHz)^2 \cdot (156.6pF + 135pF)}=1.29 \mu Hy
+\end{equation}
+Ya con estos valores, utilizando la ecuación \ref{fo}, podemos calcular el valor de la frecuencia de resonancia:
+
+
+\begin{equation}
+    f_0 = \frac{1}{2\pi \sqrt{1.29 \mu Hy \cdot 156.6pF }}=11.2MHz
+\end{equation}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{$f_0$} & 11.2 MHz \\ \hline
+    \end{tabular}
+\end{table}
+Estas mediciones se realizaron sin conectar la carga, se realizaron de vuelta con la carga conectada pero no hubo cambios significativos en la medición, lo que quiere decir que la $f_0$ es independiente de la carga, lo cual tiene sentido ya que solo depende de los valores de inductancia y capacitancia del circuito, una carga resistiva no modifica estos últimos valores.
+
+\subsection{Ancho de banda}
+
+Para realizar esta medición se conectaron los instrumentos de la siguiente forma:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/BWmed.png}
+    \caption{Medición de $BW$}
+\end{figure}
+
+Primer buscamos la frecuencia de resonancia, cuando la señal tenga máxima amplitud. Luego, de manera similar con lo simulado,  buscamos los puntos en donde cae 3 $dB$ para las frecuencias mayores y menores, y la diferencia entre estas frecuencias es el ancho de banda.
+
+\subsubsection{Ancho de banda sin carga}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Bw_pico.png}
+    \caption{Medición de la frecuencia central para el ancho de banda sin carga}
+\end{figure}
+Los resultados para la medición de la frecuencia central fueron los siguientes:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Frecuencia central} & 9.26MHz \\ \hline
+        \textbf{$V_{amp}$}    & 10.6V \\ \hline
+    \end{tabular}
+    \caption{Frecuencia central}
+\end{table}
+
+Luego calculamos el valor de tensión que se corresponde a una caída de $3dB$:
+
+\begin{equation}
+    V_{-3\text{dB}} = \frac{V_{\text{amp}}}{\sqrt{2}}=7.49V
+\end{equation}
+
+Ahora buscamos las frecuencias a las que la tensión cae 3 $dB$:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/BWalto.png}
+    \caption{Frecuencia de corte superior sin carga}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/BW_bajo.png}
+    \caption{Frecuencia de corte inferior sin carga}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{$F_U$} & 9.52MHz \\ \hline
+        \textbf{$F_L$}    & 8.93MHz \\ \hline
+    \end{tabular}
+    \caption{Frecuencias de corte}
+    \end{table}
+
+El ancho de banda se puede calcular como:
+
+
+\begin{equation}
+    \text{BW} = F_U - F_L = 9.52 \, \text{MHz} - 8.93 \, \text{MHz} = 590 \, \text{KHz}
+\end{equation}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{$BW$} & 590 KHz \\ \hline
+    \end{tabular}
+    \caption{Ancho de banda sin carga}
+\end{table}
+\subsubsection{Ancho de banda con carga}
+\label{sec:bwsec}
+
+Medimos la frecuencia central:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 130143.png}
+    \caption{Medición de la frecuencia central para el ancho de banda con carga}
+\end{figure}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Frecuencia central} & 9.26MHz \\ \hline
+        \textbf{$V_{amp}$}    & 8V \\ \hline
+    \end{tabular}
+    \caption{Frecuencia central}
+\end{table}
+
+Vemos que el valor de la frecuencia no cambió, solo varió la tensión.
+
+Luego calculamos el valor de tensión que se corresponde a una caída de $3dB$:
+
+\begin{equation}
+    V_{-3\text{dB}} = \frac{V_{\text{amp}}}{\sqrt{2}}=5.65V
+\end{equation}
+
+Ahora buscamos las frecuencias a las que la tensión cae 3 $dB$:
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 130149.png}
+    \caption{Frecuencia de corte superior con carga}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 130157.png}
+    \caption{Frecuencia de corte inferior con carga}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{$F_U$} & 9.8MHz \\ \hline
+        \textbf{$F_L$}    & 8.8MHz \\ \hline
+    \end{tabular}
+    \caption{Frecuencias de corte}
+    \end{table}
+
+El ancho de banda se puede calcular como:
+
+
+\begin{equation}
+    \text{BW} = F_U - F_L = 9.8.1 \, \text{MHz} - 8.8 \, \text{MHz} = 1 \, \text{MHz}
+\end{equation}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{$BW$} & 1 MHz \\ \hline
+    \end{tabular}
+    \caption{Ancho de banda con carga}
+\end{table}
+Vemos que el ancho de banda aumentó en el caso de carga conectada, esto se debe a que cuando analizamos la ecuación \ref{rt} podemos ver que al añadir una $R_L$, la misma está en paralelo con $R'_a$ y con $R_p$, por lo que $R_T$ disminuye su valor, y viendo la ecuación \ref{qc}, vemos que el ancho de banda es inversamente proporcional a esta resistencia, por lo que tiene sentido que cuando añadamos una resistencia de carga, el ancho de banda aumente.
+\subsection{Impedancia de entrada}
+
+Para la medición de la impedancia de entrada, el procedimiento es el mismo que el realizado en la simulación, pero utilizando la frecuencia de resonancia obtenida en el cálculo del ancho de banda.
+
+Primero medimos la salida del generador sin conectar el resto del circuito:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 131120.png}
+    \caption{Salida del generador sin conectar el circuito}
+\end{figure}
+
+Luego repetimos la medición conectando el circuito:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 131202.png}
+    \caption{Salida del generador conectando el circuito con carga}
+\end{figure}
+
+
+Obtuvimos los siguientes resultados:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{$V_i$} & 6.36V \\ \hline
+        \textbf{$V_x$}    & 3.5V \\ \hline
+    \end{tabular}
+    \caption{Tensiones medidas}
+    \end{table}
+
+\begin{equation}
+    Z_i=\frac{V_x}{V_i-V_x}\cdot R_g=74.2 \Omega
+\end{equation}
+
+
+Tenemos presente un error del 48.4\%.
+
+\subsection{Impedancia de salida}
+
+Para la medición de la impedancia de salida, el procedimiento es el mismo que el realizado en la simulación, pero utilizando la frecuencia de resonancia obtenida en el cálculo del ancho de banda.
+
+
+Primero medimos la tensión de salida del circuito sin conectar la carga:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 131832.png}
+    \caption{Tensión de salida sin carga}
+\end{figure}
+
+Luego repetimos la medición conectando la carga:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/Screenshot 2025-04-01 131845.png}
+    \caption{Tensión de salida con carga}
+\end{figure}
+
+Obtuvimos los siguientes resultados:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{$V_1$} & 13.4V \\ \hline
+        \textbf{$V_2$}    & 10.2V \\ \hline
+    \end{tabular}
+    \caption{Tensiones medidas}
+    \end{table}
+
+Con estos valores de tensión podemos calcular la impedancia de salida como:
+
+
+\begin{equation}
+    Z_o=\frac{V_2}{V_1-V_2}\cdot R_L=340 \Omega
+\end{equation}
+
+Tenemos presente un error del 66 \%.
+\subsection{Respuesta en frecuencia}
+Para esta medición se utilizó el módulo FFT del osciloscopio, y se puso la persistencia del mismo al máximo. Entonces, se varió la frecuencia del generador y el osciloscopio graficaba lentamente la respuesta en frecuencia del circuito. Una vez que se barrió toda la frecuencia, ya tenemos la respuesta total.
+
+se hizo un barrido de 0 Hz hasta 40 MHz y se graficó la respuesta del circuito en todo el espectro posible, el resultado obtenido fue el siguiente:
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Imagenes/RespuestaenFrec.jpg}
+    \caption{Respuesta en frecuencia del espectro completo}
+\end{figure}
+
+\section{Conclusiones}
+
+\subsection{Frecuencia de resonancia}
+En la simulación se tuvo un error pequeño, pero a la hora de realizar la medición, el resultado fue mucho menor que el esperado con el simulador; esto puede atribuirse a los parásitos que estamos metiendo a la hora de medir el circuito, o a un error al seleccionar los valores de $f'_0$ o $f''_0$, También puede atribuirse a la construcción de la espira, ya que no quedo completamente simétrica en su construcción debido a la naturaleza artesanal de la misma, ya que se consiguio una inductancia mas elevada a la calculada
+
+Se pudo medir con éxito la frecuencia de resonancia, y el resultado obtenido fue menor al esperado, pero dentro de la tolerancia del trabajo practico. También se demostró que la frecuencia de resonancia no se ve modificada con el estado de la carga.
+
+\subsection{Ancho de banda}
+
+En la simulación, el ancho de banda con carga fue muy próximo al teórico, pero al realizar la medición se obtuvo un error del 40\%, lo cual puede atribuirse a los parásitos anteriormente mencionados.
+
+También se demostró que el ancho de banda cae si no se conecta una resistencia de carga.
+
+Se pudo medir también de forma exitosa el ancho de banda con resultados cercanos a los teóricos.
+
+\subsection{Impedancia de entrada}
+
+En la simulación se obtuvo un error de aproximadamente 10 \%, pero al realizar las mediciones, se obtuvo un error del 48\% para arriba. En este caso, el error fue considerable; se lo atribuyo a los valores comerciales de los capacitores, el error de la tolerancia de los mismos.
+
+Se verificó que la impedancia de entrada no se ve modificada con el estado de la carga.
+
+Se pudo medir de forma correcta la impedancia de entrada; en este caso, el error que hubo fue elevado.
+
+\subsection{Impedancia de salida}
+La medición de la impedancia pudo medirse correctamente, aunque el resultado fue muy diferente al deseado. Se obtuvo un error del 66\% y esto se debe a que una de las suposiciones iniciales que hacemos para simplificar los cálculos no es verdadera. La resistencia de perdida debe ser bastante grande para no influir en el calculo de de la resistencia total del circuito, pero esta $R_P$ no es tan grande como se suponía. Fue medida durante el coloquio del trabajo practico y el resultado era de aproximadamente 9K$\Omega$, un valor muy lejano al calculado que era de casi 50K$\Omega$ . 
+
+\subsection{Resumen de resultados}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{ % Ajusta el tamaño automáticamente al ancho de la página
+    \begin{tabular}{|c|S[table-format=4.2]|S[table-format=4.2]|S[table-format=4.2]|S[table-format=4.2]|S[table-format=4.2]|}
+        \hline
+        \textbf{Parámetro} & \textbf{Teoría} & \textbf{Simulación} & \textbf{Medición} & \textbf{Error \% Simulación} & \textbf{Error \% Medición} \\
+        \hline
+        \textbf{Frecuencia central ($f_0$)[MHz]} & 12 & 11.80 & 11.19 & 1.67\% & 6.75\% \\
+        \hline
+        \textbf{Ancho de banda (BW)[MHz]} & 1.2 & 1.13 & 1 & 5.83\% & 16.67\% \\
+        \hline
+        \textbf{Impedancia de entrada ($Z_i$)[ $\Omega$]} & 50 & 46.15 & 74.2 & 7.7\% & 48.4\% \\
+        \hline
+        \textbf{Impedancia de salida ($Z_o$)[ $\Omega$]} & 1000 & 882.59 & 340 & 11.74\% & 66\% \\
+        \hline
+    \end{tabular}
+    }
+    \caption{Comparación de resultados entre teoría, simulación y medición.}
+    \label{tabla_comparacion}
+\end{table}
+\section{Elementos adicionales}
+Para la elaboración del trabajo practico se realizaron calculos en la siguiente planilla de Google Sheets:
+\href{https://docs.google.com/spreadsheets/d/1AhYS2MRX0UMFQZP1fLlpGOwqp2t82PNdxF-nJ3P5Ssk/edit?usp=sharing}{Ver hoja de cálculo}
+
+También se hicieron calculos para despejar las formulas y calcular directamente la capacidad de los elementos de medición, la inductancia real del inductor y la frecuencia de resonancia real del circuito mediante el siguiente codigo de Matlab:
+\begin{lstlisting}[language=Matlab, caption=Código en Matlab, label=lst:codigo_matlab]
+% Definir los valores de las variables
+pF = 1e-12; % picofaradios
+MHz = 1e6;  % megahercios
+
+cap1 = 156.6 * pF;
+cap2 = 120 * pF;
+freq1 = 6.9 * MHz;
+freq2 = 8.2 * MHz;
+freq3 = 8.2 * MHz;
+
+% Calcular el numerador
+numerador = cap1 * (freq1^2 - freq2^2) + cap2 * freq1^2;
+
+% Calcular el denominador
+denominador = freq3^2 - freq1^2;
+
+% Calcular Cr
+Cr = numerador / denominador;
+
+% Mostrar el resultado en picofaradios
+Cr_pF = Cr / pF;
+fprintf('Cr = %.2f pF\n', Cr_pF);
+% Definir los valores de las variables
+pi = 3.141592653589793; % Valor de pi
+MHz = 1e6;  % megahercios
+pF = 1e-12; % picofaradios
+
+freq = 8.2 * MHz;
+cap1 = 156.6 * pF;
+cap2 = 134.4 * pF;
+
+% Calcular el denominador
+denominador = (2 * pi * freq)^2 * (cap1 + cap2);
+
+% Calcular la inductancia
+inductancia = 1 / denominador;
+
+% Convertir la inductancia a microhenrios (uH)
+inductancia_uH = inductancia * 1e6;
+
+\end{lstlisting}
+
+
+\end{document}                                       
+                                                                                                      
